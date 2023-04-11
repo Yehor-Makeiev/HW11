@@ -1,4 +1,6 @@
-from classcomands import Field, Name, Phone, Record, AddressBook
+from classcomands import Field, Name, Phone, Record, AddressBook, Birthday
+from datetime import datetime
+import re
 
 
 phone_book = AddressBook()
@@ -19,16 +21,13 @@ def input_error(func):
 
 def help(*args):
     return """1. To start - enter: 'Hello'
-
 2. If you want add name and number - enter: 'add Name number' for example 'add Bill +380997654321'
-
 3. If you want change number - enter: 'change Existing_Name old_number new_nuber' for exemple 'change Bill +380997654321'
-
 4. If you want see phone number for name - enter 'phone Existing_Name' for exemple 'phone Bill'
-
 5. To show all phone book - enter 'show_all'
+6. To stop working - enter 'exit', 'good bye', 'close' 
+7. You can add a birthday for contacts. enter 'bd Name d-m-yyyy for exemple '1-1-1991 or 21-4-2000\n"""
 
-6. To stop working - enter 'exit', 'good bye', 'close' \n"""
 
 
 def hello(*args):
@@ -45,10 +44,15 @@ def add(*args):
     list_of_param = args[0].split()
     name = Name(list_of_param[0])
     phone = Phone(list_of_param[1])
+    if len(list_of_param) > 2:
+        bd = Birthday(list_of_param[2])
+        rec = Record(name, phone, bd)
+        phone_book.add_record(rec)
+        return f"I add {name} {phone} {bd} in phone_book!"
     if name.value in phone_book.keys():
         record = phone_book[name.value]
         record.add_phone(phone)
-        return f"I add {phone} to {name} in phone_book!"
+        return f"I add {phone} to {name} in phone_book!" 
     else:
         rec = Record(name, phone)
         phone_book.add_record(rec)
@@ -96,6 +100,16 @@ def show_all(*args):
     return "\n".join(result)
 
 
+def birthday(*args):
+    list_of_param = args[0].split()
+    name = Name(list_of_param[0])
+    date_bd = list_of_param[1]
+    rec = phone_book.get(name.value)
+    if rec:
+        return rec.days_to_birthday(str(date_bd))
+                    
+
+
 def no_command(*args):
     return "Unknown command, try again, or enter 'Help' "
 
@@ -106,9 +120,11 @@ COMMANDS = {help: "help",
             phone: "phone",
             hello: "hello",
             show_all: "show all",
-            delete: "delete"
+            delete: "delete",
+            birthday: "bd"
             }
 
+DATE_REGEX = r"\d{1,2}([./-])\d{1,2}\1\d{4}" 
 
 @input_error
 def parser(text: str):
@@ -119,9 +135,14 @@ def parser(text: str):
                 name = tokens[i + 1]
                 phone = tokens[i + 2]
                 try:
-                    new_phone = tokens[i + 3]
-                    result_str = f"{token.lower()} {name} {phone} {new_phone}"
-                except Exception as p:
+                    match = re.search(DATE_REGEX, tokens[i + 3]) 
+                    if match:
+                        date_bd = match.group()
+                        result_str = f"{token.lower()} {name} {phone} {date_bd}"
+                    else:
+                        new_phone = tokens[i + 3]
+                        result_str = f"{token.lower()} {name} {phone} {new_phone}"
+                except IndexError:
                     result_str = f"{token.lower()} {name} {phone}"
     else:
         result_str = text.lower()
