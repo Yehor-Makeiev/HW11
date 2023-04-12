@@ -73,3 +73,16 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
 
 
+    # def __iter__(self):
+    #     return self.generator()
+    
+    # def generator(self, n=1):
+    #     """
+    #     Generates representations for N records at a time.
+    #     :param n: number of records to generate a representation for.
+    #     """
+    #     items = self.data.items()
+    #     i = 0
+    #     while i < len(items):
+    #         yield [str(v) for k, v in items[i:i+n]]
+    #         i += n 
