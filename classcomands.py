@@ -18,9 +18,13 @@ class Phone(Field):
     def __str__(self) -> str:
         return str(self.value)
     
-class Birthday(Field):
-    def __str__(self) -> str:
-        return str(self.value)
+class Birthday:
+    
+    def __init__(self, value):
+         self.value = datetime.strptime(value, "%d-%m-%Y").date()
+    
+    def __str__(self):
+        return self.value.strftime("%d-%m-%Y")
 
 
 
@@ -29,13 +33,13 @@ class Record:
     def __init__(self, name: Name, phone: Phone = None, birthday:Birthday = None):
         self.name = name
         self.phones = [phone] if phone else [] 
-        self.birthday = birthday 
+        self.birthday = birthday
         
     def add_phone(self, phone: Phone):
         self.phones.append(phone)
     
-    def add_birthday(self, birthday):
-        self.birthday.append(birthday)
+    # def add_birthday(self, birthday):
+    #     self.birthday.append(birthday)
         
     def change_phone(self, old_phone:Phone, new_phone:Phone):
         for i, p in enumerate(self.phones):
@@ -50,15 +54,17 @@ class Record:
                 self.phones.pop(i)
                 return f'Phone {phone} deleted'
 
-    def days_to_birthday(self):
-        day_now = datetime.today()
-        next_birthday_year = day_now.year
-        if day_now.month > self.birthday.month or (day_now.month == self.birthday.month and day_now.day > self.birthday.day):
-            next_birthday_year += 1
-        next_birthday = datetime(next_birthday_year, self.birthday.month, self.birthday.day)
-        days_to_birthday = (next_birthday - day_now).days
-        return f"{days_to_birthday} days to {self.name} birthday"
-        
+    def days_to_birthday(self, name:Name):
+        if self.birthday:
+            day_now = datetime.today()
+            next_birthday_year = day_now.year
+            if (day_now.month, day_now.day) > (self.birthday.value.month, self.birthday.value.day):
+                next_birthday_year += 1
+            next_birthday = datetime(next_birthday_year, self.birthday.value.month, 
+                                    self.birthday.value.day)
+            d_t_birthday = (next_birthday - day_now).days
+            return f"{d_t_birthday} days to {self.name} birthday"
+        return f"Date not found"
         
     
     def __str__(self) -> str:
@@ -72,17 +78,3 @@ class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data[record.name.value] = record
 
-
-    # def __iter__(self):
-    #     return self.generator()
-    
-    # def generator(self, n=1):
-    #     """
-    #     Generates representations for N records at a time.
-    #     :param n: number of records to generate a representation for.
-    #     """
-    #     items = self.data.items()
-    #     i = 0
-    #     while i < len(items):
-    #         yield [str(v) for k, v in items[i:i+n]]
-    #         i += n 

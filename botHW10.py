@@ -101,12 +101,11 @@ def show_all(*args):
 
 
 def birthday(*args):
-    list_of_param = args[0].split()
+    list_of_param = args[0].title().split()
     name = Name(list_of_param[0])
-    date_bd = list_of_param[1]
     rec = phone_book.get(name.value)
     if rec:
-        return rec.days_to_birthday(str(date_bd))
+        return rec.days_to_birthday(name)
                     
 
 
