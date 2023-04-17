@@ -94,11 +94,17 @@ def delete(*args):
 
 
 def show_all(*args):
+    list_of_param = args[0].split()
+    if len(list_of_param) >= 1:
+        users_num = int(list_of_param[0])
+        for rec in phone_book.paginator(users_num):
+            return rec
+        
     result = []
     for name, phones in phone_book.items():
         result.append(f"{name}: {''.join(str(phones))}")
     return "\n".join(result)
-
+    
 
 def birthday(*args):
     list_of_param = args[0].title().split()
@@ -118,9 +124,10 @@ COMMANDS = {help: "help",
             change: "change",
             phone: "phone",
             hello: "hello",
-            show_all: "show all",
+            show_all: "showall",
             delete: "delete",
             birthday: "bd"
+            # show: "show"
             }
 
 DATE_REGEX = r"\d{1,2}([./-])\d{1,2}\1\d{4}" 

@@ -15,8 +15,25 @@ class Name(Field):
 
 
 class Phone(Field):
+    
+    def __init__(self, phone = None):
+        # super().__init__(phone)
+        self.__phone = None
+        self.phone = phone
+
+    
     def __str__(self) -> str:
-        return str(self.value)
+        return str(self.phone)
+    
+    @property
+    def phone(self):
+        return self.__phone
+
+    @phone.setter
+    def phone(self, value):
+        if len(value) != 13:
+            raise ValueError("Phone number must have '+' and 12 digits")
+        self.__phone = value
     
 class Birthday:
     
@@ -25,7 +42,6 @@ class Birthday:
     
     def __str__(self):
         return self.value.strftime("%d-%m-%Y")
-
 
 
 class Record:
@@ -78,3 +94,12 @@ class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data[record.name.value] = record
 
+    def paginator(self, users_num):
+       start = 0
+       while True:
+           result = list(self.data)[start: start + users_num]
+           result_list = [f"{key} : {self.data.get(key)}" for key in result]
+           if not result:
+               break
+           yield "\n".join(result_list)
+           start += users_num
