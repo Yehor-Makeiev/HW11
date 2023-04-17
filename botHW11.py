@@ -26,7 +26,8 @@ def help(*args):
 4. If you want see phone number for name - enter 'phone Existing_Name' for exemple 'phone Bill'
 5. To show all phone book - enter 'show_all'
 6. To stop working - enter 'exit', 'good bye', 'close' 
-7. You can add a birthday for contacts. enter 'bd Name d-m-yyyy for exemple '1-1-1991 or 21-4-2000\n"""
+7. You can add a birthday for contacts. enter 'bd Name d-m-yyyy for exemple '1-1-1991 or 21-4-2000
+8. Нou can find out how many days are left until the constakt's birthday, enter 'bd <name>' \n"""
 
 
 

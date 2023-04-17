@@ -17,7 +17,6 @@ class Name(Field):
 class Phone(Field):
     
     def __init__(self, phone = None):
-        # super().__init__(phone)
         self.__phone = None
         self.phone = phone
 
@@ -38,11 +37,23 @@ class Phone(Field):
 class Birthday:
     
     def __init__(self, value):
-         self.value = datetime.strptime(value, "%d-%m-%Y").date()
+        self.__value = None
+        self.value = value
     
     def __str__(self):
         return self.value.strftime("%d-%m-%Y")
 
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self, value):
+        try:
+            datetime.strptime(value, "%d-%m-%Y")
+            self.__value = datetime.strptime(value, "%d-%m-%Y").date()
+        except ValueError:
+            raise ValueError("Invalid date format. Please enter date in format DD-MM-YYYY.")
 
 class Record:
 
