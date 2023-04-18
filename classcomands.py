@@ -16,10 +16,10 @@ class Name(Field):
 
 class Phone(Field):
     
-    def __init__(self, phone = None):
+    def __init__(self, phone):
         self.__phone = None
         self.phone = phone
-
+        
     
     def __str__(self) -> str:
         return str(self.phone)
@@ -70,14 +70,14 @@ class Record:
         
     def change_phone(self, old_phone:Phone, new_phone:Phone):
         for i, p in enumerate(self.phones):
-            if p.value == old_phone.value:
+            if p.phone == old_phone.phone:
                 self.phones[i] = new_phone
                 return f'Phone {old_phone} change to {new_phone}'
         return f'Contact has no phone {old_phone}'
          
     def delete_phone(self, phone:Phone):
         for i, p in enumerate(self.phones):
-            if p.value == phone.value:
+            if p.phone == phone.phone:
                 self.phones.pop(i)
                 return f'Phone {phone} deleted'
 
